@@ -390,6 +390,14 @@ altitude {
   box-sizing: border-box; /* Include padding and border in width */
 }
 
+#SeatbeltIcon {
+  position: absolute;
+  transition: opacity 1s ease-in-out;
+  top: -11.2vh; 
+  width: 20px; 
+  height: 20px;
+}
+
 /* End Fuel Counter */
 
 

@@ -978,10 +978,6 @@ const vehHud = {
       this.speed = data.speed;
       this.altitude = data.altitude;
       this.fuel = (data.fuel * 0.71);
-
-      const progressBar = document.querySelector('#progressBar .progress');
-
-
       this.showSeatbelt = data.showSeatbelt;
       this.showAltitude = data.showAltitude;
       this.showSquareB = data.showSquareB;
@@ -989,9 +985,11 @@ const vehHud = {
       if (data.seatbelt === true) {
         this.seatbelt = 1;
         this.seatbeltColor = "transparent";
+        this.seatbeltOpacity = 0;
       } else {
         this.seatbelt = 0;
         this.seatbeltColor = "#FF5100";
+        this.seatbeltOpacity = 1;
       }
       if (data.showSeatbelt === true) {
         this.showSeatbelt = true;
@@ -1010,16 +1008,7 @@ const vehHud = {
       } else {
         this.fuelColor = "#FFFFFF";
       }
-
-      // Check if progressBar exists before trying to update its style
-      if (progressBar) {
-        // Update the height of the fuel progress bar
-        progressBar.style.height = this.fuel + '%';
-        progressBar.style.backgroundColor = this.fuelColor;
-      } else {
-          //console.log("oh you're in a car?");
-      }
-
+      this.fuelHeight = this.fuel + '%';
       if (data.showSquareB === true) {
         this.showSquare = true;
       } else {
