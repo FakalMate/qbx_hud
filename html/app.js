@@ -980,26 +980,7 @@ const vehHud = {
       this.fuel = (data.fuel * 0.71);
 
       const progressBar = document.querySelector('#progressBar .progress');
-      // Check if progressBar exists before trying to update its style
-      if (progressBar) {
-          // Update the height of the fuel progress bar
-          progressBar.style.height = this.fuel + '%';
-      
-          // Change color to orange if under 30%
-          if (this.fuel < 30) {
-              progressBar.style.backgroundColor = 'orange';
-          } 
-          // Change color to red if under 20%
-          if (this.fuel < 20) {
-              progressBar.style.backgroundColor = 'red';
-          } 
-          // Default color (if above 30%)
-          if (this.fuel >= 30) {
-              progressBar.style.backgroundColor = '#ffffff';
-          }
-      } else {
-          //console.log("oh you're in a car?");
-      }
+
 
       this.showSeatbelt = data.showSeatbelt;
       this.showAltitude = data.showAltitude;
@@ -1029,6 +1010,16 @@ const vehHud = {
       } else {
         this.fuelColor = "#FFFFFF";
       }
+
+      // Check if progressBar exists before trying to update its style
+      if (progressBar) {
+        // Update the height of the fuel progress bar
+        progressBar.style.height = this.fuel + '%';
+        progressBar.style.backgroundColor = this.fuelColor;
+      } else {
+          //console.log("oh you're in a car?");
+      }
+
       if (data.showSquareB === true) {
         this.showSquare = true;
       } else {
