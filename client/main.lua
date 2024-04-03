@@ -1033,3 +1033,25 @@ RegisterNetEvent('qbx_hud:client:hideHud', function()
         })
     end
 end)
+
+
+Citizen.CreateThread(function()
+    while true do
+        local player = GetPlayerPed(-1)
+        local vehicle = GetVehiclePedIsIn(player, false)
+
+        if IsPedInAnyVehicle(player, false) and GetIsVehicleEngineRunning(vehicle) then
+        --print("is a car beu")
+            local rpmlol = GetVehicleCurrentRpm(vehicle)
+            local selectedgear = getSelectedGear()
+            local gearlol = getinfo(selectedgear)
+            --print("RPM: " .. rpm)  -- Debugging line
+
+            SendNUIMessage({
+                rpm = rpmlol,
+                gear = gearlol
+            })
+        end
+        Citizen.Wait(100)
+    end
+end)

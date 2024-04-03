@@ -978,6 +978,29 @@ const vehHud = {
       this.speed = data.speed;
       this.altitude = data.altitude;
       this.fuel = (data.fuel * 0.71);
+
+      const progressBar = document.querySelector('#progressBar .progress');
+      // Check if progressBar exists before trying to update its style
+      if (progressBar) {
+          // Update the height of the fuel progress bar
+          progressBar.style.height = this.fuel + '%';
+      
+          // Change color to orange if under 30%
+          if (this.fuel < 30) {
+              progressBar.style.backgroundColor = 'orange';
+          } 
+          // Change color to red if under 20%
+          if (this.fuel < 20) {
+              progressBar.style.backgroundColor = 'red';
+          } 
+          // Default color (if above 30%)
+          if (this.fuel >= 30) {
+              progressBar.style.backgroundColor = '#ffffff';
+          }
+      } else {
+          //console.log("oh you're in a car?");
+      }
+
       this.showSeatbelt = data.showSeatbelt;
       this.showAltitude = data.showAltitude;
       this.showSquareB = data.showSquareB;
@@ -1021,6 +1044,27 @@ const vehHud = {
       }
     },
   },
+  computed: {
+    speedDisplay() {
+        if (!this.show) {
+            return '';
+        }
+        var speedStr = this.speed.toString().padStart(3, '0');
+        var html = '';
+        var nonZeroEncountered = false;
+        for (var i = 0; i < speedStr.length; i++) {
+            if (speedStr[i] !== '0') {
+                nonZeroEncountered = true;
+            }
+            if (nonZeroEncountered) {
+                html += '<span style="color: white;">' + speedStr[i] + '</span>';
+            } else {
+                html += '<span style="color: #8f8f8f;">' + speedStr[i] + '</span>';
+            }
+        }
+        return html;
+    }
+  } 
 };
 const app3 = Vue.createApp(vehHud);
 app3.use(Quasar);
@@ -1096,3 +1140,48 @@ const baseplateHud = {
 const app4 = Vue.createApp(baseplateHud);
 app4.use(Quasar);
 app4.mount("#baseplate-container");
+
+
+function updateRPM(rpm) {
+  var rpmBar = document.getElementById('rpmBar');
+  if (rpmBar) {
+      rpmBar.innerHTML = '';
+      for (var i = 0; i < 18; i++) {
+          var item = document.createElement('div');
+          item.className = 'item';
+          if (i < rpm) {
+              if (i >= 16) {
+                  item.classList.add('critical');
+              } else {
+                  item.classList.add('filled');
+              }
+          }
+          rpmBar.appendChild(item);
+      }
+  } else {
+      //console.log("Element with ID 'rpmBar' not found");
+  }
+}
+
+
+// RPM Counter Updater //
+window.addEventListener('message', function(event) {
+  var rpm = event.data.rpm;
+  if (rpm !== undefined) {
+      //console.log("Received RPM: " + rpm);
+      updateRPM((rpm / 1) * 18);
+  } else {
+      //console.log("RPM data not received");
+  }
+});
+
+// Gear Counter Updater //
+document.addEventListener("DOMContentLoaded", function() {
+  window.addEventListener("message", function(event) {
+      var gearElement = document.getElementById("gear");
+      if (gearElement && event.data.gear) {
+          // Update the gear display with the data from Lua
+          gearElement.innerHTML = event.data.gear;
+      }
+  });
+});
