@@ -27,6 +27,7 @@ const app = Vue.createApp({
       isPointerShowChecked: this.initIsPointerShowChecked(),
       isDegreesShowChecked: this.initIsDegreesShowChecked(),
       isCineamticModeChecked: this.initIsCineamticModeChecked(),
+      isCustomColorPicked: this.initIsCustomColorPicked() // Initial color value
 		};
 	},
   setup () {
@@ -143,6 +144,9 @@ const app = Vue.createApp({
     isCineamticModeChecked: function() {
 			localStorage.setItem("isCineamticModeChecked", this.isCineamticModeChecked);
 		},
+    isCustomColorPicked: function() {
+      localStorage.setItem("isCustomColorPicked", this.isCustomColorPicked)
+    }
 	},
   methods: {
     initIsOutMapChecked: function() {
@@ -337,6 +341,15 @@ const app = Vue.createApp({
 				return stored == 'true';
 			}
 		},
+    initIsCustomColorPicked: function() {
+      const stored = localStorage.getItem("isCustomColorPicked")
+      if (stored === null) {
+        console.log("hereeeee2")
+				return "#ff0000";
+			} else {
+				return stored;
+			}
+    },
     resetStorage: function(event) {
       targetId = event.currentTarget.id;
       localStorage.clear();
@@ -442,6 +455,10 @@ const app = Vue.createApp({
       targetId = event.currentTarget.id;
       cinematicMode()
     },
+    pickCustomColor: function(event) {
+      targetId = event.currentTarget.id;
+      pickCustomColor()
+    }
   },
   mounted() {
     this.listener = window.addEventListener("message", (event) => {
